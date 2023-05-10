@@ -1,0 +1,106 @@
+-- phpMyAdmin SQL Dump
+-- version 3.0.1.1
+-- http://www.phpmyadmin.net
+--
+-- 服务器版本: 5.1.29
+-- PHP 版本: 5.2.6
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+-- --------------------------------------------------------
+
+-- ----------------------------
+-- Table structure for `admin`
+-- ----------------------------
+DROP TABLE IF EXISTS `admin`;
+CREATE TABLE `admin` (
+  `username` varchar(20) NOT NULL DEFAULT '',
+  `password` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_admin
+-- ----------------------------
+INSERT INTO `admin` VALUES ('a', 'a'); 
+
+CREATE TABLE IF NOT EXISTS `t_userInfo` (
+  `user_name` varchar(20)  NOT NULL COMMENT 'user_name',
+  `password` varchar(20)  NOT NULL COMMENT '登录密码',
+  `areaObj` int(11) NOT NULL COMMENT '所在学院',
+  `name` varchar(20)  NOT NULL COMMENT '姓名',
+  `sex` varchar(4)  NOT NULL COMMENT '性别',
+  `userPhoto` varchar(60)  NOT NULL COMMENT '学生照片',
+  `birthday` varchar(20)  NULL COMMENT '出生日期',
+  `telephone` varchar(20)  NOT NULL COMMENT '联系电话',
+  `address` varchar(50)  NOT NULL COMMENT '家庭地址',
+  PRIMARY KEY (`user_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `t_area` (
+  `areaId` int(11) NOT NULL AUTO_INCREMENT COMMENT '学院id',
+  `areaName` varchar(20)  NOT NULL COMMENT '学院名称',
+  PRIMARY KEY (`areaId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE IF NOT EXISTS `t_lookingFor` (
+  `lookingForId` int(11) NOT NULL AUTO_INCREMENT COMMENT '寻物id',
+  `title` varchar(30)  NOT NULL COMMENT '标题',
+  `goodsName` varchar(40)  NOT NULL COMMENT '丢失物品',
+  `goodsPhoto` varchar(60)  NOT NULL COMMENT '物品照片',
+  `lostTime` varchar(20)  NULL COMMENT '丢失时间',
+  `lostPlace` varchar(20)  NOT NULL COMMENT '丢失地点',
+  `goodDesc` varchar(500)  NOT NULL COMMENT '物品描述',
+  `reward` varchar(40)  NOT NULL COMMENT '报酬',
+  `telephone` varchar(20)  NOT NULL COMMENT '联系电话',
+  `userObj` varchar(20)  NOT NULL COMMENT '学生',
+  `addTime` varchar(20)  NULL COMMENT '发布时间',
+  PRIMARY KEY (`lookingForId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE IF NOT EXISTS `t_lostFound` (
+  `lostFoundId` int(11) NOT NULL AUTO_INCREMENT COMMENT '招领id',
+  `title` varchar(40)  NOT NULL COMMENT '标题',
+  `goodsName` varchar(20)  NOT NULL COMMENT '物品名称',
+  `pickUpTime` varchar(20)  NULL COMMENT '捡得时间',
+  `pickUpPlace` varchar(20)  NOT NULL COMMENT '拾得地点',
+  `contents` varchar(2000)  NOT NULL COMMENT '描述说明',
+  `connectPerson` varchar(20)  NOT NULL COMMENT '联系人',
+  `phone` varchar(20)  NOT NULL COMMENT '联系电话',
+  `addTime` varchar(20)  NULL COMMENT '发布时间',
+  PRIMARY KEY (`lostFoundId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE IF NOT EXISTS `t_claim` (
+  `claimId` int(11) NOT NULL AUTO_INCREMENT COMMENT '认领id',
+  `lostFoundObj` int(11) NOT NULL COMMENT '招领信息',
+  `personName` varchar(20)  NOT NULL COMMENT '认领人',
+  `claimTime` varchar(20)  NULL COMMENT '认领时间',
+  `contents` varchar(500)  NULL COMMENT '描述说明',
+  `addTime` varchar(20)  NULL COMMENT '发布时间',
+  PRIMARY KEY (`claimId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE IF NOT EXISTS `t_praise` (
+  `praiseId` int(11) NOT NULL AUTO_INCREMENT COMMENT '表扬id',
+  `lostFoundObj` int(11) NOT NULL COMMENT '招领信息',
+  `title` varchar(40)  NOT NULL COMMENT '标题',
+  `contents` varchar(300)  NOT NULL COMMENT '表扬内容',
+  `addTime` varchar(20)  NULL COMMENT '表扬时间',
+  PRIMARY KEY (`praiseId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE IF NOT EXISTS `t_notice` (
+  `noticeId` int(11) NOT NULL AUTO_INCREMENT COMMENT '通知id',
+  `title` varchar(50)  NOT NULL COMMENT '标题',
+  `content` varchar(2000)  NOT NULL COMMENT '内容',
+  `addTime` varchar(20)  NULL COMMENT '发布时间',
+  PRIMARY KEY (`noticeId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+ALTER TABLE t_userInfo ADD CONSTRAINT FOREIGN KEY (areaObj) REFERENCES t_area(areaId);
+ALTER TABLE t_lookingFor ADD CONSTRAINT FOREIGN KEY (userObj) REFERENCES t_userInfo(user_name);
+ALTER TABLE t_claim ADD CONSTRAINT FOREIGN KEY (lostFoundObj) REFERENCES t_lostFound(lostFoundId);
+ALTER TABLE t_praise ADD CONSTRAINT FOREIGN KEY (lostFoundObj) REFERENCES t_lostFound(lostFoundId);
+
+

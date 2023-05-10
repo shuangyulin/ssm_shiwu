@@ -1,0 +1,49 @@
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace命名空间，为了对sql语句进行隔离，方便管理，mapper开发dao方式，使用namespace有特殊作用  
+mapper代理开发时将namespace指定为mapper接口的全限定名  
+ -->
+<mapper namespace="com.chengxusheji.mapper.ClaimMapper"> 
+<!--在mapper.xml文件中配置很多的sql语句，执行每个sql语句时，封装为MappedStatement对象 
+mapper.xml以statement为单位管理sql语句  
+ -->
+	<!-- 添加认领记录 -->
+	<insert id="addClaim" parameterType="claim">
+		insert into t_claim(lostFoundObj,personName,claimTime,contents,addTime) values 
+		(#{lostFoundObj.lostFoundId},#{personName},#{claimTime},#{contents},#{addTime})
+	</insert>
+
+	<!-- 按照查询条件分页查询认领记录 -->
+	<select id="queryClaim" resultMap="claimMap" >
+		select t_claim.* from t_claim,t_lostFound ${where} and t_claim.lostFoundObj = t_lostFound.lostFoundId limit #{startIndex},#{pageSize}
+	</select>
+	<resultMap id="claimMap" type="claim">
+        <id property="claimId" column="claimId" />
+        <association property="lostFoundObj" column="lostFoundObj" select="com.chengxusheji.mapper.LostFoundMapper.getLostFound" />
+    </resultMap>
+
+    <!-- 按照查询条件查询所有认领记录 -->
+	<select id="queryClaimList" resultMap="claimMap" >
+		select t_claim.* from t_claim,t_lostFound ${where} and t_claim.lostFoundObj = t_lostFound.lostFoundId
+	</select>
+
+    <!-- 按照查询条件的认领记录数 -->
+	<select id="queryClaimCount" resultType="int">
+		select count(*) from t_claim,t_lostFound ${where} and t_claim.lostFoundObj = t_lostFound.lostFoundId
+	</select>
+
+	<!-- 根据主键查询某个认领记录 -->
+	<select id="getClaim" parameterType="int" resultMap="claimMap">
+		select * from t_claim where t_claim.claimId = #{claimId}
+	</select>
+
+	<!-- 更新认领记录 -->
+	<update id="updateClaim" parameterType="claim">
+		update t_claim set lostFoundObj=#{lostFoundObj.lostFoundId},personName=#{personName},claimTime=#{claimTime},contents=#{contents},addTime=#{addTime} where claimId = #{claimId}
+	</update>
+
+	<!-- 删除认领记录 -->
+	<delete id="deleteClaim" parameterType="int">
+		delete from t_claim where claimId=#{claimId}
+	</delete>
+
+</mapper>

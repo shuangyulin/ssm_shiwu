@@ -1,0 +1,48 @@
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace命名空间，为了对sql语句进行隔离，方便管理，mapper开发dao方式，使用namespace有特殊作用  
+mapper代理开发时将namespace指定为mapper接口的全限定名  
+ -->
+<mapper namespace="com.chengxusheji.mapper.AreaMapper"> 
+<!--在mapper.xml文件中配置很多的sql语句，执行每个sql语句时，封装为MappedStatement对象 
+mapper.xml以statement为单位管理sql语句  
+ -->
+	<!-- 添加学院记录 -->
+	<insert id="addArea" parameterType="area">
+		insert into t_area(areaName) values 
+		(#{areaName})
+	</insert>
+
+	<!-- 按照查询条件分页查询学院记录 -->
+	<select id="queryArea" resultMap="areaMap" >
+		select t_area.* from t_area ${where} limit #{startIndex},#{pageSize}
+	</select>
+	<resultMap id="areaMap" type="area">
+        <id property="areaId" column="areaId" />
+    </resultMap>
+
+    <!-- 按照查询条件查询所有学院记录 -->
+	<select id="queryAreaList" resultMap="areaMap" >
+		select t_area.* from t_area ${where}
+	</select>
+
+    <!-- 按照查询条件的学院记录数 -->
+	<select id="queryAreaCount" resultType="int">
+		select count(*) from t_area ${where}
+	</select>
+
+	<!-- 根据主键查询某个学院记录 -->
+	<select id="getArea" parameterType="int" resultMap="areaMap">
+		select * from t_area where t_area.areaId = #{areaId}
+	</select>
+
+	<!-- 更新学院记录 -->
+	<update id="updateArea" parameterType="area">
+		update t_area set areaName=#{areaName} where areaId = #{areaId}
+	</update>
+
+	<!-- 删除学院记录 -->
+	<delete id="deleteArea" parameterType="int">
+		delete from t_area where areaId=#{areaId}
+	</delete>
+
+</mapper>

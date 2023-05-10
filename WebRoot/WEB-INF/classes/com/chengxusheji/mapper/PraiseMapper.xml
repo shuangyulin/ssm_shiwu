@@ -1,0 +1,49 @@
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace命名空间，为了对sql语句进行隔离，方便管理，mapper开发dao方式，使用namespace有特殊作用  
+mapper代理开发时将namespace指定为mapper接口的全限定名  
+ -->
+<mapper namespace="com.chengxusheji.mapper.PraiseMapper"> 
+<!--在mapper.xml文件中配置很多的sql语句，执行每个sql语句时，封装为MappedStatement对象 
+mapper.xml以statement为单位管理sql语句  
+ -->
+	<!-- 添加表扬记录 -->
+	<insert id="addPraise" parameterType="praise">
+		insert into t_praise(lostFoundObj,title,contents,addTime) values 
+		(#{lostFoundObj.lostFoundId},#{title},#{contents},#{addTime})
+	</insert>
+
+	<!-- 按照查询条件分页查询表扬记录 -->
+	<select id="queryPraise" resultMap="praiseMap" >
+		select t_praise.* from t_praise,t_lostFound ${where} and t_praise.lostFoundObj = t_lostFound.lostFoundId limit #{startIndex},#{pageSize}
+	</select>
+	<resultMap id="praiseMap" type="praise">
+        <id property="praiseId" column="praiseId" />
+        <association property="lostFoundObj" column="lostFoundObj" select="com.chengxusheji.mapper.LostFoundMapper.getLostFound" />
+    </resultMap>
+
+    <!-- 按照查询条件查询所有表扬记录 -->
+	<select id="queryPraiseList" resultMap="praiseMap" >
+		select t_praise.* from t_praise,t_lostFound ${where} and t_praise.lostFoundObj = t_lostFound.lostFoundId
+	</select>
+
+    <!-- 按照查询条件的表扬记录数 -->
+	<select id="queryPraiseCount" resultType="int">
+		select count(*) from t_praise,t_lostFound ${where} and t_praise.lostFoundObj = t_lostFound.lostFoundId
+	</select>
+
+	<!-- 根据主键查询某个表扬记录 -->
+	<select id="getPraise" parameterType="int" resultMap="praiseMap">
+		select * from t_praise where t_praise.praiseId = #{praiseId}
+	</select>
+
+	<!-- 更新表扬记录 -->
+	<update id="updatePraise" parameterType="praise">
+		update t_praise set lostFoundObj=#{lostFoundObj.lostFoundId},title=#{title},contents=#{contents},addTime=#{addTime} where praiseId = #{praiseId}
+	</update>
+
+	<!-- 删除表扬记录 -->
+	<delete id="deletePraise" parameterType="int">
+		delete from t_praise where praiseId=#{praiseId}
+	</delete>
+
+</mapper>
